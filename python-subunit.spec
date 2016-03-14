@@ -1,8 +1,4 @@
 #
-# This is template for pure python modules (noarch)
-# use template-specs/python-ext.spec for binary python packages
-#
-#
 # Conditional build:
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
@@ -99,7 +95,7 @@ done
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/subunit/tests
 %py_postclean
 
-for f in $RPM_BUILD_ROOT%{_bindir}/*[!3] ; do
+for f in $RPM_BUILD_ROOT%{_bindir}/*[!3]; do
 	%{__mv} "$f" "${f}-2"
 	ln -sf $(basename $f)-2 "$f"
 done
