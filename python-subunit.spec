@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
-%bcond_with	tests	# test target
+%bcond_without	tests	# test target
 
 %define 	module	template
 Summary:	subunit - streaming protocol for test results
