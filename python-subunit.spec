@@ -1,7 +1,7 @@
 #
 # Conditional build:
-%bcond_without	python2 # CPython 2.x module
-%bcond_without	python3 # CPython 3.x module
+%bcond_without	python2 # CPython 2.x module and tools
+%bcond_without	python3 # CPython 3.x module and tools
 %bcond_without	tests	# test target
 
 %define 	module	template
@@ -9,7 +9,7 @@ Summary:	subunit - streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		python-subunit
 Version:	1.2.0
-Release:	1
+Release:	2
 License:	Apache v2.0 or BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.python.org/simple/python-subunit/
@@ -47,8 +47,38 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Subunit is a streaming protocol for test results.
 
+This package contains Python 2.x modules.
+
 %description -l pl.UTF-8
 Subunit to protokół strumieniowy przeznaczony do wyników testów.
+
+Ten pakiet zawiera moduły Pythona 2.x.
+
+%package -n subunit-python
+Summary:	Python tools for subunit streaming protocol for test results
+Summary(pl.UTF-8):	Pythonowe narzędzia dla protokołu strumieniowego do wyników testów subunit
+Group:		Development/Tools
+Requires:	subunit-python2 = %{version}-%{release}
+
+%description -n subunit-python
+Python tools for subunit streaming protocol for test results.
+
+%description -n subunit-python -l pl.UTF-8
+Pythonowe narzędzia dla protokołu strumieniowego do wyników testów
+subunit.
+
+%package -n subunit-python2
+Summary:	Python 2 tools for subunit streaming protocol for test results
+Summary(pl.UTF-8):	Narzędzia Pythona 2 dla protokołu strumieniowego do wyników testów subunit
+Group:		Development/Tools
+Requires:	python-subunit = %{version}-%{release}
+
+%description -n subunit-python2
+Python 2 tools for subunit streaming protocol for test results.
+
+%description -n subunit-python2 -l pl.UTF-8
+Narzędzia Pythona 2 dla protokołu strumieniowego do wyników testów
+subunit.
 
 %package -n python3-subunit
 Summary:	subunit - streaming protocol for test results
@@ -61,8 +91,25 @@ Requires:	python3-testtools >= 0.9.34
 %description -n python3-subunit
 Subunit is a streaming protocol for test results.
 
+This package contains Python 2.x modules.
+
 %description -n python3-subunit -l pl.UTF-8
 Subunit to protokół strumieniowy przeznaczony do wyników testów.
+
+Ten pakiet zawiera moduły Pythona 2.x.
+
+%package -n subunit-python3
+Summary:	Python 3 tools for subunit streaming protocol for test results
+Summary(pl.UTF-8):	Narzędzia Pythona 3 dla protokołu strumieniowego do wyników testów subunit
+Group:		Development/Tools
+Requires:	python3-subunit = %{version}-%{release}
+
+%description -n subunit-python3
+Python 3 tools for subunit streaming protocol for test results.
+
+%description -n subunit-python3 -l pl.UTF-8
+Narzędzia Pythona 3 dla protokołu strumieniowego do wyników testów
+subunit.
 
 %prep
 %setup -q
@@ -108,6 +155,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc NEWS README.rst
+%{py_sitescriptdir}/subunit
+%{py_sitescriptdir}/python_subunit-%{version}-py*.egg-info
+
+%files -n subunit-python
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/subunit-1to2
 %attr(755,root,root) %{_bindir}/subunit-2to1
 %attr(755,root,root) %{_bindir}/subunit-filter
@@ -121,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit2junitxml
 %attr(755,root,root) %{_bindir}/subunit2pyunit
 %attr(755,root,root) %{_bindir}/tap2subunit
+
+%files -n subunit-python2
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/subunit-1to2-2
 %attr(755,root,root) %{_bindir}/subunit-2to1-2
 %attr(755,root,root) %{_bindir}/subunit-filter-2
@@ -134,14 +189,17 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit2junitxml-2
 %attr(755,root,root) %{_bindir}/subunit2pyunit-2
 %attr(755,root,root) %{_bindir}/tap2subunit-2
-%{py_sitescriptdir}/subunit
-%{py_sitescriptdir}/python_subunit-%{version}-py*.egg-info
 %endif
 
 %if %{with python3}
 %files -n python3-subunit
 %defattr(644,root,root,755)
 %doc NEWS README.rst
+%{py3_sitescriptdir}/subunit
+%{py3_sitescriptdir}/python_subunit-%{version}-py*.egg-info
+
+%files -n subunit-python3
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/subunit-1to2-3
 %attr(755,root,root) %{_bindir}/subunit-2to1-3
 %attr(755,root,root) %{_bindir}/subunit-filter-3
@@ -155,6 +213,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit2junitxml-3
 %attr(755,root,root) %{_bindir}/subunit2pyunit-3
 %attr(755,root,root) %{_bindir}/tap2subunit-3
-%{py3_sitescriptdir}/subunit
-%{py3_sitescriptdir}/python_subunit-%{version}-py*.egg-info
 %endif
