@@ -1,0 +1,62 @@
+Disable test_test_protocol2, which depends on testtools own test suite.
+Don't require unittest2 on python 3.5+.
+Adjust some traceback quirks for (python3 or not unittest2???)
+
+--- python-subunit-1.3.0/python/subunit/tests/__init__.py.orig	2018-07-27 17:10:42.361296016 +0200
++++ python-subunit-1.3.0/python/subunit/tests/__init__.py	2018-07-27 17:10:56.404629189 +0200
+@@ -40,7 +40,6 @@
+     test_subunit_tags,
+     test_tap2subunit,
+     test_test_protocol,
+-    test_test_protocol2,
+     test_test_results,
+     )
+ 
+@@ -53,7 +52,6 @@
+     result.addTest(loader.loadTestsFromModule(test_progress_model))
+     result.addTest(loader.loadTestsFromModule(test_test_results))
+     result.addTest(loader.loadTestsFromModule(test_test_protocol))
+-    result.addTest(loader.loadTestsFromModule(test_test_protocol2))
+     result.addTest(loader.loadTestsFromModule(test_tap2subunit))
+     result.addTest(loader.loadTestsFromModule(test_filter_to_disk))
+     result.addTest(loader.loadTestsFromModule(test_subunit_filter))
+--- python-subunit-1.3.0/python/subunit/tests/test_test_protocol.py.orig	2018-07-27 17:16:40.051291931 +0200
++++ python-subunit-1.3.0/python/subunit/tests/test_test_protocol.py	2018-07-27 17:16:42.897958565 +0200
+@@ -16,7 +16,10 @@
+ 
+ import datetime
+ import io
+-import unittest2 as unittest
++try:
++    import unittest2 as unittest
++except ImportError:
++    import unittest
+ import os
+ import sys
+ import tempfile
+--- python-subunit-1.3.0/python/subunit/tests/__init__.py.orig	2018-07-27 18:09:57.424588755 +0200
++++ python-subunit-1.3.0/python/subunit/tests/__init__.py	2018-07-29 12:02:31.736200742 +0200
+@@ -22,9 +22,10 @@
+ 
+ # Before the test module imports to avoid circularity.
+ # For testing: different pythons have different str() implementations.
++tb_prelude = "Traceback (most recent call last):\n" if sys.version_info[0] < 3 else ""
+ _remote_exception_repr = "testtools.testresult.real._StringException"
+-_remote_exception_str = "Traceback (most recent call last):\ntesttools.testresult.real._StringException"
+-_remote_exception_str_chunked = "57\r\n" + _remote_exception_str + ": boo qux\n0\r\n"
++_remote_exception_str = tb_prelude + "testtools.testresult.real._StringException"
++_remote_exception_str_chunked = ("%X" % (42+10+len(tb_prelude)) + "\r\n" + _remote_exception_str + ": boo qux\n0\r\n"
+ 
+ 
+ from subunit.tests import (
+--- python-subunit-1.3.0/python/subunit/tests/test_test_protocol.py.orig	2018-07-29 12:02:58.076200443 +0200
++++ python-subunit-1.3.0/python/subunit/tests/test_test_protocol.py	2018-07-29 12:03:04.769533698 +0200
+@@ -51,7 +51,7 @@
+ import subunit.iso8601 as iso8601
+ 
+ 
+-tb_prelude = "Traceback (most recent call last):\n" 
++from subunit.tests import tb_prelude   # tb_prelude = "Traceback (most recent call last):\n" if sys.version_info[0] < 3 else ""
+ 
+ 
+ def details_to_str(details):
