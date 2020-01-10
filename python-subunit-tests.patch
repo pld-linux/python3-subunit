@@ -45,7 +45,7 @@ Adjust some traceback quirks for (python3 or not unittest2???)
 -_remote_exception_str = "Traceback (most recent call last):\ntesttools.testresult.real._StringException"
 -_remote_exception_str_chunked = "57\r\n" + _remote_exception_str + ": boo qux\n0\r\n"
 +_remote_exception_str = tb_prelude + "testtools.testresult.real._StringException"
-+_remote_exception_str_chunked = ("%X" % (42+10+len(tb_prelude)) + "\r\n" + _remote_exception_str + ": boo qux\n0\r\n"
++_remote_exception_str_chunked = ("%X" % (42+10+len(tb_prelude))) + "\r\n" + _remote_exception_str + ": boo qux\n0\r\n"
  
  
  from subunit.tests import (

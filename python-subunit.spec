@@ -8,7 +8,7 @@ Summary:	subunit - streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		python-subunit
 Version:	1.3.0
-Release:	2
+Release:	3
 License:	Apache v2.0 or BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/python-subunit/
@@ -56,19 +56,6 @@ Subunit to protokół strumieniowy przeznaczony do wyników testów.
 
 Ten pakiet zawiera moduły Pythona 2.x.
 
-%package -n subunit-python
-Summary:	Python tools for subunit streaming protocol for test results
-Summary(pl.UTF-8):	Pythonowe narzędzia dla protokołu strumieniowego do wyników testów subunit
-Group:		Development/Tools
-Requires:	subunit-python2 = %{version}-%{release}
-
-%description -n subunit-python
-Python tools for subunit streaming protocol for test results.
-
-%description -n subunit-python -l pl.UTF-8
-Pythonowe narzędzia dla protokołu strumieniowego do wyników testów
-subunit.
-
 %package -n subunit-python2
 Summary:	Python 2 tools for subunit streaming protocol for test results
 Summary(pl.UTF-8):	Narzędzia Pythona 2 dla protokołu strumieniowego do wyników testów subunit
@@ -111,6 +98,23 @@ Python 3 tools for subunit streaming protocol for test results.
 Narzędzia Pythona 3 dla protokołu strumieniowego do wyników testów
 subunit.
 
+%package -n subunit-python
+Summary:	Python tools for subunit streaming protocol for test results
+Summary(pl.UTF-8):	Pythonowe narzędzia dla protokołu strumieniowego do wyników testów subunit
+Group:		Development/Tools
+%if %{with python3}
+Requires:	subunit-python3 = %{version}-%{release}
+%else
+Requires:	subunit-python2 = %{version}-%{release}
+%endif
+
+%description -n subunit-python
+Python tools for subunit streaming protocol for test results.
+
+%description -n subunit-python -l pl.UTF-8
+Pythonowe narzędzia dla protokołu strumieniowego do wyników testów
+subunit.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -137,25 +141,30 @@ PYTHONPATH=$(pwd)/python \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with python3}
-%py3_install
-
-%{__rm} -r $RPM_BUILD_ROOT%{py3_sitescriptdir}/subunit/tests
-
-for f in $RPM_BUILD_ROOT%{_bindir}/* ; do
-	%{__mv} "$f" "${f}-3"
-done
-%endif
-
 %if %{with python2}
 %py_install
 
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/subunit/tests
 %py_postclean
 
-for f in $RPM_BUILD_ROOT%{_bindir}/*[!3]; do
+for f in $RPM_BUILD_ROOT%{_bindir}/* ; do
 	%{__mv} "$f" "${f}-2"
+%if %{without python3}
 	ln -sf $(basename $f)-2 "$f"
+%endif
+done
+%endif
+
+%if %{with python3}
+%py3_install
+
+%{__rm} -r $RPM_BUILD_ROOT%{py3_sitescriptdir}/subunit/tests
+
+for f in $RPM_BUILD_ROOT%{_bindir}/* ; do
+	if [ "${f%%-2}" = "$f" ]; then
+		%{__mv} "$f" "${f}-3"
+		ln -sf $(basename $f)-3 "$f"
+	fi
 done
 %endif
 
@@ -168,23 +177,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS README.rst
 %{py_sitescriptdir}/subunit
 %{py_sitescriptdir}/python_subunit-%{version}-py*.egg-info
-
-%files -n subunit-python
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/subunit-1to2
-%attr(755,root,root) %{_bindir}/subunit-2to1
-%attr(755,root,root) %{_bindir}/subunit-filter
-%attr(755,root,root) %{_bindir}/subunit-ls
-%attr(755,root,root) %{_bindir}/subunit-notify
-%attr(755,root,root) %{_bindir}/subunit-output
-%attr(755,root,root) %{_bindir}/subunit-stats
-%attr(755,root,root) %{_bindir}/subunit-tags
-%attr(755,root,root) %{_bindir}/subunit2csv
-%attr(755,root,root) %{_bindir}/subunit2disk
-%attr(755,root,root) %{_bindir}/subunit2gtk
-%attr(755,root,root) %{_bindir}/subunit2junitxml
-%attr(755,root,root) %{_bindir}/subunit2pyunit
-%attr(755,root,root) %{_bindir}/tap2subunit
 
 %files -n subunit-python2
 %defattr(644,root,root,755)
@@ -228,3 +220,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit2pyunit-3
 %attr(755,root,root) %{_bindir}/tap2subunit-3
 %endif
+
+%files -n subunit-python
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/subunit-1to2
+%attr(755,root,root) %{_bindir}/subunit-2to1
+%attr(755,root,root) %{_bindir}/subunit-filter
+%attr(755,root,root) %{_bindir}/subunit-ls
+%attr(755,root,root) %{_bindir}/subunit-notify
+%attr(755,root,root) %{_bindir}/subunit-output
+%attr(755,root,root) %{_bindir}/subunit-stats
+%attr(755,root,root) %{_bindir}/subunit-tags
+%attr(755,root,root) %{_bindir}/subunit2csv
+%attr(755,root,root) %{_bindir}/subunit2disk
+%attr(755,root,root) %{_bindir}/subunit2gtk
+%attr(755,root,root) %{_bindir}/subunit2junitxml
+%attr(755,root,root) %{_bindir}/subunit2pyunit
+%attr(755,root,root) %{_bindir}/tap2subunit
