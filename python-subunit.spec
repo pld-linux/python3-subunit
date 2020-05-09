@@ -7,20 +7,20 @@
 Summary:	subunit - streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		python-subunit
-Version:	1.3.0
-Release:	3
+Version:	1.4.0
+Release:	1
 License:	Apache v2.0 or BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/python-subunit/
 Source0:	https://files.pythonhosted.org/packages/source/p/python-subunit/%{name}-%{version}.tar.gz
-# Source0-md5:	16d468a3aeafe6c60a0c3b2b9132d65b
+# Source0-md5:	30f1ab20651d94442dd9a7f8c9e8d633
 Patch0:		%{name}-tests.patch
 URL:		https://pypi.org/project/python-subunit/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
 BuildRequires:	python-extras
-BuildRequires:	python-modules >= 1:2.6
+BuildRequires:	python-modules >= 1:2.7
 BuildRequires:	python-testtools >= 0.9.34
 %if %{with tests}
 BuildRequires:	python-fixtures
@@ -31,18 +31,15 @@ BuildRequires:	python-unittest2
 %endif
 %if %{with python3}
 BuildRequires:	python3-extras
-BuildRequires:	python3-modules >= 1:3.2
+BuildRequires:	python3-modules >= 1:3.5
 BuildRequires:	python3-testtools >= 0.9.34
 %if %{with tests}
 BuildRequires:	python3-fixtures
 BuildRequires:	python3-hypothesis
 BuildRequires:	python3-testscenarios
-%if "%{py3_ver}" < "3.5"
-BuildRequires:	python3-unittest2
 %endif
 %endif
-%endif
-Requires:	python-modules >= 1:2.6
+Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
