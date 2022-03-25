@@ -8,7 +8,7 @@ Summary:	subunit - streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		python-subunit
 Version:	1.4.0
-Release:	2
+Release:	3
 License:	Apache v2.0 or BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/python-subunit/
