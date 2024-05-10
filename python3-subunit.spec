@@ -5,13 +5,13 @@
 Summary:	subunit - streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		python3-subunit
-Version:	1.4.3
+Version:	1.4.4
 Release:	1
 License:	Apache v2.0 or BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/python-subunit/
 Source0:	https://files.pythonhosted.org/packages/source/p/python-subunit/python-subunit-%{version}.tar.gz
-# Source0-md5:	30ed3d6a2586a5e29ab560c12735c58a
+# Source0-md5:	cb86de103e2fa2ca38db418f0d3d18a6
 Patch0:		python-subunit-tests.patch
 URL:		https://pypi.org/project/python-subunit/
 BuildRequires:	python3-modules >= 1:3.7
