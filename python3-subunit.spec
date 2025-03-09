@@ -66,7 +66,7 @@ subunit.
 
 %prep
 %setup -q -n python-subunit-%{version}
-%patch0 -p1
+%patch -P 0 -p1
 
 %build
 %py3_build
