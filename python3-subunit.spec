@@ -20,6 +20,7 @@ BuildRequires:	python3-testtools >= 0.9.34
 %if %{with tests}
 BuildRequires:	python3-fixtures
 BuildRequires:	python3-hypothesis
+BuildRequires:	python3-iso8601
 BuildRequires:	python3-testscenarios
 %endif
 BuildRequires:	rpm-pythonprov
